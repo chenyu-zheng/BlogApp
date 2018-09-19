@@ -62,12 +62,12 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Created,Updated,Title,Slug,Body,MediaUrl,Published")] Post post)
+        public ActionResult Create([Bind(Include = "Title,Body,MediaUrl,Published")] Post post)
         {
             if (ModelState.IsValid)
             {
-                var slug = StringUtilities.URLFriendly(post.Title);
-                if (String.IsNullOrWhiteSpace(slug))
+                string slug = StringUtilities.URLFriendly(post.Title);
+                if (string.IsNullOrWhiteSpace(slug))
                 {
                     ModelState.AddModelError(nameof(Post.Title), "Invalid title");
                     return View(post);
@@ -78,7 +78,6 @@ namespace BlogApp.Controllers
                     return View(post);
                 }
                 post.Slug = slug;
-
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -107,11 +106,25 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Created,Updated,Title,Slug,Body,MediaUrl,Published")] Post post)
+        public ActionResult Edit([Bind(Include = "Id,Title,Body,MediaUrl,Published")] Post post)
         {
             if (ModelState.IsValid)
-            {
-                db.Entry(post).State = EntityState.Modified;
+            {  
+                Post op = db.Posts.Where(p => p.Id == post.Id).FirstOrDefault();
+                if (post.Title != op.Title)
+                {
+                    string slug = StringUtilities.URLFriendly(post.Title);
+                    if (db.Posts.Any(p => p.Slug == slug))
+                    {
+                        ModelState.AddModelError(nameof(Post.Title), "The title must be unique");
+                        return View(post);
+                    }
+                    op.Slug = slug;
+                }
+                op.Title = post.Title;
+                op.Body = post.Body;
+                op.MediaUrl = post.MediaUrl;
+                op.Updated = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

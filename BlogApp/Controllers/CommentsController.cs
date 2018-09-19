@@ -49,7 +49,7 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,PostId,AuthorId,Body,Created,Updated,UpdateReason")] Comment comment)
+        public ActionResult Create([Bind(Include = "Id,PostId,AuthorId,Body")] Comment comment)
         {
             if (ModelState.IsValid)
             {
@@ -85,11 +85,14 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,PostId,AuthorId,Body,Created,Updated,UpdateReason")] Comment comment)
+        public ActionResult Edit([Bind(Include = "Id,PostId,AuthorId,Body,UpdateReason")] Comment comment)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(comment).State = EntityState.Modified;
+                Comment op = db.Comments.Where(p => p.Id == comment.Id).FirstOrDefault();
+                op.Body = comment.Body;
+                op.UpdateReason = comment.UpdateReason;
+                op.Updated = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

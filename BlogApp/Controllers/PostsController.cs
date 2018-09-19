@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BlogApp.Helpers;
 using BlogApp.Models;
 
 namespace BlogApp.Controllers
@@ -35,6 +36,21 @@ namespace BlogApp.Controllers
             return View(post);
         }
 
+        public ActionResult DetailsBySlug(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Post post = db.Posts.FirstOrDefault(p => p.Slug == slug);
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+            return View("Details", post);
+        }
+
+
         // GET: Posts/Create
         public ActionResult Create()
         {
@@ -50,6 +66,19 @@ namespace BlogApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                var slug = StringUtilities.URLFriendly(post.Title);
+                if (String.IsNullOrWhiteSpace(slug))
+                {
+                    ModelState.AddModelError(nameof(Post.Title), "Invalid title");
+                    return View(post);
+                }
+                if (db.Posts.Any(p => p.Slug == slug))
+                {
+                    ModelState.AddModelError(nameof(Post.Title), "The title must be unique");
+                    return View(post);
+                }
+                post.Slug = slug;
+
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");

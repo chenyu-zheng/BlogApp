@@ -23,7 +23,7 @@
         <hr>
 
         <!-- Date/Time -->
-        <p>
+        <p class="text-muted small">
             <span class="glyphicon glyphicon-time"></span>
             @if (Model.Updated.HasValue)
             {
@@ -50,9 +50,12 @@
         </p>
 
         <!-- Edit Button -->
-        <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = Model.Id })>
-            Edit&ensp;<i class="fas fa-edit"></i>
-        </a>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = Model.Id })>
+                Edit&ensp;<i class="fas fa-edit"></i>
+            </a>
+        }
 
         <hr>
 

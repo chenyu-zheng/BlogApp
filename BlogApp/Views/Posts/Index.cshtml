@@ -12,10 +12,14 @@
     <div class="col-md-8 col-md-offset-2">
 
         <!-- Create Button -->
-        <a class="btn btn-primary" href=@Url.Action("Create", "Posts")>
-            Create New&ensp;<i class="fas fa-plus"></i>
-        </a>
-        <hr>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <a class="btn btn-primary" href=@Url.Action("Create", "Posts")>
+                Create New&ensp;<i class="fas fa-plus"></i>
+            </a>
+            <hr>
+        }
+
 
         <!-- Blog Posts -->
         @foreach (var item in Model.OrderByDescending(x => x.Created))
@@ -28,7 +32,7 @@
             <p class="lead">
                 by <a href="index.php">Start Bootstrap</a>
             </p>
-            <p>
+            <p class="text-muted small">
                 <span class="glyphicon glyphicon-time"></span>
                 @if (item.Updated.HasValue)
                 {
@@ -48,16 +52,26 @@
                 @Html.Raw(item.Body)
             </p>
             <!-- Buttons -->
-            <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
-                Read More&ensp;<i class="fas fa-chevron-right"></i>
-            </a>
-            <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
-                Edit&ensp;<i class="fas fa-edit"></i>
-            </a>
-            <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
-                Delete&ensp;<i class="fas fa-trash-alt"></i>
-            </a>
-
+            <ul class="list-unstyled">
+                <li>
+                    <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                        Read More&ensp;<i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
+                            Edit&ensp;<i class="fas fa-edit"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
+                            Delete&ensp;<i class="fas fa-trash-alt"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
 
             <hr>
         }
@@ -76,69 +90,68 @@
 
 </div>
 <!-- /.row -->
-
 @*<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Updated)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Slug)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Body)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MediaUrl)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Published)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Slug)
-            </td>
-            <td>
-                @Html.Raw(item.Body)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MediaUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Published)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("DetailsBySlug", "DetailsBySlug", new { slug = item.Slug })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Body)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediaUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Published)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>*@
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slug)
+                </td>
+                <td>
+                    @Html.Raw(item.Body)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MediaUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Published)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("DetailsBySlug", "DetailsBySlug", new { slug = item.Slug })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>*@

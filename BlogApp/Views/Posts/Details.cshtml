@@ -1,10 +1,126 @@
 ﻿@model BlogApp.Models.Post
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = @Html.DisplayFor(model => model.Title);
+    ViewBag.Heading = "Post Details";
+    ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
-<h2>Details</h2>
+<div class="row">
+
+    <!-- Blog Post Content Column -->
+    <div class="col-lg-8 col-lg-offset-2">
+
+        <!-- Blog Post -->
+        <!-- Title -->
+        <h1>@Html.DisplayFor(model => model.Title)</h1>
+
+        <!-- Author -->
+        <p class="lead">
+            by <a href="#">Start Bootstrap</a>
+        </p>
+
+        <hr>
+
+        <!-- Date/Time -->
+        <p>
+            <span class="glyphicon glyphicon-time"></span>
+            @if (Model.Updated.HasValue)
+            {
+                <span> Updated on </span>
+                @Model.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+            }
+            <span> Posted on </span>
+            @Model.Created.ToString("dd MMM yyyy")
+        </p>
+
+        <hr>
+
+        <!-- Preview Image -->
+        <img class="img-responsive" src=@Html.DisplayFor(model => model.MediaUrl) alt="">
+
+        <hr>
+
+        <!-- Post Content -->
+        <p>
+            @Html.Raw(Model.Body)
+        </p>
+
+        <!-- Edit Button -->
+        <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = Model.Id })>
+            Edit&ensp;<i class="fas fa-edit"></i>
+        </a>
+
+        <hr>
+
+        <!-- Blog Comments -->
+        <!-- Posted Comments -->
+        <!-- Comment -->
+        <div class="media">
+            <a class="pull-left" href="#">
+                <img class="media-object" src="http://placehold.it/64x64" alt="">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">
+                    Start Bootstrap
+                    <small>August 25, 2014 at 9:30 PM</small>
+                </h4>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+            </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="media">
+            <a class="pull-left" href="#">
+                <img class="media-object" src="http://placehold.it/64x64" alt="">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">
+                    Start Bootstrap
+                    <small>August 25, 2014 at 9:30 PM</small>
+                </h4>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                <!-- Nested Comment -->
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <img class="media-object" src="http://placehold.it/64x64" alt="">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            Nested Start Bootstrap
+                            <small>August 25, 2014 at 9:30 PM</small>
+                        </h4>
+                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    </div>
+                </div>
+                <!-- End Nested Comment -->
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Comments Form -->
+        <div class="well">
+            <h4>Leave a Comment:</h4>
+            <form role="form">
+                <div class="form-group">
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+        <!-- Back Button -->
+        <a class="btn btn-default" href=@Url.Action("Index", "Posts")>
+            Back to List&ensp;<i class="fas fa-chevron-left"></i>
+        </a>
+
+    </div>
+
+</div>
+<!-- /.row -->
+
+@*<h2>Details</h2>
 
 <div>
     <h4>Post</h4>
@@ -71,4 +187,4 @@
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
-</p>
+</p>*@

@@ -37,7 +37,10 @@
         <hr>
 
         <!-- Preview Image -->
-        <img class="img-responsive" src=@Html.DisplayFor(model => model.MediaUrl) alt="">
+        @if (Model.MediaUrl != null)
+        {
+            <img class="img-responsive" src=@Model.MediaUrl alt="">
+        }
 
         <hr>
 

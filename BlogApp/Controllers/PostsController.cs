@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -62,7 +63,7 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Body,MediaUrl,Published")] Post post)
+        public ActionResult Create([Bind(Include = "Title,Body,MediaUrl,Published")] Post post, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
@@ -78,6 +79,17 @@ namespace BlogApp.Controllers
                     return View(post);
                 }
                 post.Slug = slug;
+                if (image != null)
+                {
+                    if (!ImageUploadValidator.IsWebFriendlyImage(image))
+                    {
+                        ModelState.AddModelError(nameof(Post.MediaUrl), "Invalid image file");
+                        return View(post);
+                    }
+                    string fileName = Path.GetFileName(image.FileName);
+                    image.SaveAs(Path.Combine(Server.MapPath("~/Uploads"), fileName));
+                    post.MediaUrl = "/Uploads/" + fileName;
+                }
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -106,7 +118,7 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Body,MediaUrl,Published")] Post post)
+        public ActionResult Edit([Bind(Include = "Id,Title,Body,MediaUrl,Published")] Post post, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {  
@@ -121,9 +133,20 @@ namespace BlogApp.Controllers
                     }
                     op.Slug = slug;
                 }
+                if (image != null)
+                {
+                    if (!ImageUploadValidator.IsWebFriendlyImage(image))
+                    {
+                        ModelState.AddModelError(nameof(Post.MediaUrl), "Invalid image file");
+                        return View(post);
+                    }
+                    string fileName = Path.GetFileName(image.FileName);
+                    image.SaveAs(Path.Combine(Server.MapPath("~/Uploads"), fileName));
+                    op.MediaUrl = "/Uploads/" + fileName;
+                }
                 op.Title = post.Title;
                 op.Body = post.Body;
-                op.MediaUrl = post.MediaUrl;
+                op.Published = post.Published;
                 op.Updated = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("Index");

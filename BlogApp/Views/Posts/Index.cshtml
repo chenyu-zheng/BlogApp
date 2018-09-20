@@ -39,7 +39,10 @@
                 @item.Created.ToString("dd MMM yyyy")
             </p>
             <hr>
-            <img class="img-responsive" src=@Html.DisplayFor(modelItem => item.MediaUrl) alt="">
+            if (item.MediaUrl != null)
+            {
+                <img class="img-responsive" src=@item.MediaUrl alt="">
+            }
             <hr>
             <p>
                 @Html.Raw(item.Body)

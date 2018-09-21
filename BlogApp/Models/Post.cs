@@ -12,8 +12,8 @@ namespace BlogApp.Models
         public int Id { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset? Updated { get; set; }
-        [StringLength(100, MinimumLength = 4, ErrorMessage = "Title must be between 4 and 100 characters.")]
-        [RegularExpression(@".*[a-zA-Z]+.*", ErrorMessage = "Title must contain at least one letter.")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "The {0} must be between {2} and {1} characters.")]
+        [RegularExpression(@".*[a-zA-Z]+.*", ErrorMessage = "The {0} must contain at least one letter.")]
         public string Title { get; set; }
         public string Slug { get; set; }
         [AllowHtml]

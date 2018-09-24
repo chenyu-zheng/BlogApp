@@ -1,33 +1,119 @@
-﻿@{
+﻿@model IEnumerable<BlogApp.Models.Post>
+
+@{
     ViewBag.Title = "Blog App";
-    ViewBag.Heading = "My Blog";
+    ViewBag.Heading = "Blog Home";
     ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <h1>Recent Updates</h1>
+        <hr />
+        <ul class="post-list">
+            @foreach (var item in Model.OrderByDescending(
+                p => p.Updated == null ? p.Created : p.Updated
+                ).Take(5))
+            {
+                <li class="post-list-item">
+                    <h2>
+                        <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </a>
+                    </h2>
+
+                    <p class="text-muted">
+                        <span class="glyphicon glyphicon-time"></span>
+                        @if (item.Updated.HasValue)
+                        {
+                            <span> Updated on </span>
+                            @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+                        }
+                        <span> Posted on </span>
+                        @item.Created.ToString("dd MMM yyyy")
+                    </p>
+
+                    @if (item.MediaUrl != null)
+                    {
+                        <p>
+                            <img class="img-responsive" src=@item.MediaUrl alt="">
+                        </p>
+                    }
+
+                    <!-- Buttons -->
+                    <ul class="list-unstyled list-inline list-btn">
+                        <li>
+                            <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                                Read More&ensp;<i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
+                                    Edit&ensp;<i class="fas fa-edit"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
+                                    Delete&ensp;<i class="fas fa-trash-alt"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <hr>
+                </li>
+            }
+        </ul>
+    </div>
 </div>
 
+<style>
+    table th, table td {
+        padding: 15px;
+    }
+</style>
+
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="col-lg-8 col-lg-offset-2">
+        <h1 class="page-header">
+            Test Accounts
+        </h1>
+        <table>
+            <tr>
+                <th>
+                    Role
+                </th>
+                <th>
+                    User Name
+                </th>
+                <th>
+                    Password
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    Admin
+                </td>
+                <td>
+                    admin@myblogapp.com
+                </td>
+                <td>
+                    blogadmin
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Moderator
+                </td>
+                <td>
+                    mod@myblogapp.com
+                </td>
+                <td>
+                    blogmod
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

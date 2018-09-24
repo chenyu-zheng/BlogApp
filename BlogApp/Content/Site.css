@@ -1,41 +1,45 @@
-﻿body {
-    /*padding-top: 50px;
-    padding-bottom: 20px;*/
-}
-
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    /*padding-left: 15px;
-    padding-right: 15px;*/
-}
-
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
+﻿/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column  */
 .dl-horizontal dt {
-    white-space: normal;
+  white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    /*max-width: 280px;*/
+.post-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
-
-footer .copyright {
-    margin: 0;
+.post-list-item img {
+  max-width: 700px;
+  height: auto;
 }
 
 @media only screen and (min-width: 768px) {
-    header.intro-header .page-heading, header.intro-header .post-heading, header.intro-header .site-heading {
-        padding: 120px 0;
-    }
+  .navbar-right {
+    margin-left: 15px;
+  }
+}
+
+/*
+    Override the template styles
+*/
+footer .copyright {
+  margin: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  header.intro-header .page-heading,
+  header.intro-header .post-heading,
+  header.intro-header .site-heading {
+    padding: 120px 0;
+  }
 }
 
 @media only screen and (min-width: 1170px) {
-    header.intro-header .page-heading, header.intro-header .post-heading, header.intro-header .site-heading {
-        padding: 150px 0;
-    }
+  header.intro-header .page-heading,
+  header.intro-header .post-heading,
+  header.intro-header .site-heading {
+    padding: 150px 0;
+  }
 }

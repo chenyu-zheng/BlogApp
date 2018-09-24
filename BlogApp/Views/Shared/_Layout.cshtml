@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <!-- Theme CSS -->
-    <link href="~/Content/clean-blog.min.css" rel="stylesheet" />
+    <link href="~/Content/clean-blog.css" rel="stylesheet" />
 
     <!-- Custom Fonts -->
     <link href="~/Content/Fontawesome/all.min.css" rel="stylesheet" />
@@ -38,11 +38,10 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Posts", "Index", "Posts")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

@@ -1,15 +1,17 @@
 ﻿@model IEnumerable<BlogApp.Models.Post>
 
 @{
-    ViewBag.Title = "Posts";
-    ViewBag.Heading = "Post List";
-    ViewBag.SubHeading = "Built with ASP.NET MVC 5";
+                /**/
+
+                ViewBag.Title = "Posts";
+                ViewBag.Heading = "Post List";
+                ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
 <div class="row">
 
     <!-- Blog Entries Column -->
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-lg-8 col-lg-offset-2">
 
         <!-- Create Button -->
         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
@@ -22,59 +24,60 @@
 
 
         <!-- Blog Posts -->
-        @foreach (var item in Model.OrderByDescending(x => x.Created))
-        {
-            <h2>
-                <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </a>
-            </h2>
-            <p class="lead">
-                by <a href="index.php">Start Bootstrap</a>
-            </p>
-            <p class="text-muted small">
-                <span class="glyphicon glyphicon-time"></span>
-                @if (item.Updated.HasValue)
-                {
-                    <span> Updated on </span>
-                    @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
-                }
-                <span> Posted on </span>
-                @item.Created.ToString("dd MMM yyyy")
-            </p>
-            <hr>
-            if (item.MediaUrl != null)
+        <ul class="post-list">
+            @foreach (var item in Model.OrderByDescending(x => x.Created))
             {
-                <img class="img-responsive" src=@item.MediaUrl alt="">
-            }
-            <hr>
-            <p>
-                @Html.Raw(item.Body)
-            </p>
-            <!-- Buttons -->
-            <ul class="list-unstyled">
-                <li>
-                    <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
-                        Read More&ensp;<i class="fas fa-chevron-right"></i>
-                    </a>
-                </li>
-                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                {
-                    <li>
-                        <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
-                            Edit&ensp;<i class="fas fa-edit"></i>
+                <li class="post-list-item">
+                    <h2>
+                        <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                            @Html.DisplayFor(modelItem => item.Title)
                         </a>
-                    </li>
-                    <li>
-                        <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
-                            Delete&ensp;<i class="fas fa-trash-alt"></i>
-                        </a>
-                    </li>
-                }
-            </ul>
+                    </h2>
 
-            <hr>
-        }
+                    <p class="text-muted">
+                        <span class="glyphicon glyphicon-time"></span>
+                        @if (item.Updated.HasValue)
+                        {
+                            <span> Updated on </span>
+                            @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+                        }
+                        <span> Posted on </span>
+                        @item.Created.ToString("dd MMM yyyy")
+                    </p>
+
+                    @if (item.MediaUrl != null)
+                    {
+                        <p>
+                            <img class="img-responsive" src=@item.MediaUrl alt="">
+                        </p>
+                    }
+
+                    <!-- Buttons -->
+                    <ul class="list-unstyled list-inline list-btn">
+                        <li>
+                            <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                                Read More&ensp;<i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
+                                    Edit&ensp;<i class="fas fa-edit"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
+                                    Delete&ensp;<i class="fas fa-trash-alt"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <hr>
+                </li>
+            }
+        </ul>
 
         <!-- Pager -->
         <ul class="pager">
@@ -89,69 +92,3 @@
     </div>
 
 </div>
-<!-- /.row -->
-@*<h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Slug)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Body)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MediaUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Published)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Updated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Slug)
-                </td>
-                <td>
-                    @Html.Raw(item.Body)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MediaUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Published)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("DetailsBySlug", "DetailsBySlug", new { slug = item.Slug })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-
-    </table>*@

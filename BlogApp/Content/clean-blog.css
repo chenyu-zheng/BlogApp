@@ -3,19 +3,19 @@
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
-body {
+/* body {
   font-family: 'Lora', 'Times New Roman', serif;
   font-size: 20px;
   color: #333333;
-}
-p {
+} */
+/* p {
   line-height: 1.5;
   margin: 30px 0;
 }
 p a {
   text-decoration: underline;
-}
-h1,
+} */
+/* h1,
 h2,
 h3,
 h4,
@@ -23,8 +23,8 @@ h5,
 h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 800;
-}
-a {
+} */
+/* a {
   color: #333333;
 }
 a:hover,
@@ -44,7 +44,7 @@ hr.small {
   margin: 15px auto;
   border-width: 4px;
   border-color: white;
-}
+} */
 .navbar-custom {
   position: absolute;
   top: 0;
@@ -330,7 +330,7 @@ footer .copyright {
 form .row:first-child .floating-label-form-group {
   border-top: 1px solid #eeeeee;
 }
-.btn {
+/* .btn {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-size: 14px;
@@ -348,8 +348,8 @@ form .row:first-child .floating-label-form-group {
   background-color: #0085A1;
   border: 1px solid #0085A1;
   color: white;
-}
-.pager {
+} */
+/* .pager {
   margin: 20px 0 0;
 }
 .pager li > a,
@@ -376,7 +376,7 @@ form .row:first-child .floating-label-form-group {
   color: #777777;
   background-color: #333333;
   cursor: not-allowed;
-}
+} */
 ::-moz-selection {
   color: white;
   text-shadow: none;

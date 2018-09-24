@@ -1,11 +1,12 @@
-﻿@model IEnumerable<BlogApp.Models.Post>
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<BlogApp.Models.Post>
 
 @{
-                /**/
-
-                ViewBag.Title = "Posts";
-                ViewBag.Heading = "Post List";
-                ViewBag.SubHeading = "Built with ASP.NET MVC 5";
+    ViewBag.Title = "Posts";
+    ViewBag.Heading = "Post List";
+    ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
 <div class="row">
@@ -21,7 +22,6 @@
             </a>
             <hr>
         }
-
 
         <!-- Blog Posts -->
         <ul class="post-list">
@@ -79,15 +79,9 @@
             }
         </ul>
 
-        <!-- Pager -->
-        <ul class="pager">
-            <li class="previous">
-                <a href="#">&larr; Older</a>
-            </li>
-            <li class="next">
-                <a href="#">Newer &rarr;</a>
-            </li>
-        </ul>
+        <div>
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount	@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
 
     </div>
 

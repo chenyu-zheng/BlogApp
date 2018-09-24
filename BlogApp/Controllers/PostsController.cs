@@ -88,7 +88,8 @@ namespace BlogApp.Controllers
                         ModelState.AddModelError(nameof(Post.MediaUrl), "Invalid image file");
                         return View(post);
                     }
-                    string fileName = Path.GetFileName(image.FileName);
+                    string fileName = FileHelper.MD5String(image)
+                        + Path.GetExtension(image.FileName);
                     image.SaveAs(Path.Combine(Server.MapPath("~/Uploads"), fileName));
                     post.MediaUrl = "/Uploads/" + fileName;
                 }
@@ -125,7 +126,7 @@ namespace BlogApp.Controllers
         public ActionResult Edit([Bind(Include = "Id,Title,Body,MediaUrl,Published")] Post post, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
-            {  
+            {
                 Post op = db.Posts.Where(p => p.Id == post.Id).FirstOrDefault();
                 if (post.Title != op.Title)
                 {
@@ -144,7 +145,8 @@ namespace BlogApp.Controllers
                         ModelState.AddModelError(nameof(Post.MediaUrl), "Invalid image file");
                         return View(post);
                     }
-                    string fileName = Path.GetFileName(image.FileName);
+                    string fileName = FileHelper.MD5String(image)
+                        + Path.GetExtension(image.FileName);
                     image.SaveAs(Path.Combine(Server.MapPath("~/Uploads"), fileName));
                     op.MediaUrl = "/Uploads/" + fileName;
                 }

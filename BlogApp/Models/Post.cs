@@ -17,6 +17,7 @@ namespace BlogApp.Models
         public string Title { get; set; }
         public string Slug { get; set; }
         [AllowHtml]
+        [StringLength(20000, ErrorMessage = "The {0} cannot exceed {1} characters.")]
         public string Body { get; set; }
         public string MediaUrl { get; set; }
         public bool Published { get; set; }

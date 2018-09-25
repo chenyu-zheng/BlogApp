@@ -13,7 +13,8 @@ namespace BlogApp.Models
         public virtual Post Post { get; set; }
         public string AuthorId { get; set; }
         public virtual ApplicationUser Author { get; set; } 
-        [StringLength(2000, MinimumLength = 1, ErrorMessage = "The comment must be between {2} and {1} characters.")]
+        [Required]
+        [StringLength(2000, MinimumLength = 4, ErrorMessage = "The comment must be between {2} and {1} characters.")]
         public string Body { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset? Updated { get; set; }

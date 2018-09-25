@@ -4,7 +4,31 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<ol class="list-unstyled comment-list">
+    @foreach(var item in Model.OrderByDescending(p => p.Created))
+    {
+        <li class="comment-item media">
+            <h4 class="media-heading">
+                @Html.DisplayFor(modelItem => item.Author.DisplayName)
+                <small>
+                    @if (item.Updated.HasValue)
+                    {
+                        @item.Updated.Value.ToString("dd MMM yyyy");
+                    }
+                    else
+                    {
+                        @item.Created.ToString("dd MMM yyyy");
+                    }
+                </small>
+            </h4>
+            <p class="comment-body">
+                @Html.DisplayFor(modeItem => item.Body)
+            </p>
+        </li>
+    }
+</ol>
+
+@*<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -60,4 +84,4 @@
     </tr>
 }
 
-</table>
+</table>*@

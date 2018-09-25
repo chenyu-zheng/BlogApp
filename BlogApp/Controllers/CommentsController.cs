@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BlogApp.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BlogApp.Controllers
 {
@@ -15,10 +16,10 @@ namespace BlogApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comments
-        public ActionResult Index()
+        public ActionResult Index(int postId)
         {
-            var comments = db.Comments.Include(c => c.Author).Include(c => c.Post);
-            return View(comments.ToList());
+            List<Comment> comments = db.Comments.Where(p => p.PostId == postId).Include(c => c.Author).ToList();
+            return PartialView(comments);
         }
 
         // GET: Comments/Details/5
@@ -38,11 +39,11 @@ namespace BlogApp.Controllers
 
         // GET: Comments/Create
         [Authorize]
-        public ActionResult Create()
+        public ActionResult Create(int postId)
         {
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName");
-            ViewBag.PostId = new SelectList(db.Posts, "Id", "Title");
-            return View();
+            Comment comment = new Comment();
+            comment.PostId = postId;
+            return PartialView(comment);
         }
 
         // POST: Comments/Create
@@ -51,18 +52,31 @@ namespace BlogApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create([Bind(Include = "Id,PostId,AuthorId,Body")] Comment comment)
+        public ActionResult Create([Bind(Include = "Id,PostId,Body")] Comment comment)
         {
             if (ModelState.IsValid)
             {
+                //if (comment.PostId == null)
+                //{
+                //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //}
+
+                Post post = db.Posts.Where(p => p.Id == comment.PostId).FirstOrDefault();
+
+                if (post == null)
+                {
+                    return HttpNotFound();
+                }
+
+                comment.AuthorId = User.Identity.GetUserId();
                 db.Comments.Add(comment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("DetailsBySlug", "Posts", new { slug = post.Slug });
             }
 
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
             ViewBag.PostId = new SelectList(db.Posts, "Id", "Title", comment.PostId);
-            return View(comment);
+            return PartialView(comment);
         }
 
         // GET: Comments/Edit/5

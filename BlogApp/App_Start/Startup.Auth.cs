@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using Owin.Security.Providers.GitHub;
 using Owin;
 using BlogApp.Models;
 
@@ -63,6 +64,10 @@ namespace BlogApp
                 ClientId = "54181717171-qda8ip48f3kc1sk8e38d6rtugh2pdbn5.apps.googleusercontent.com",
                 ClientSecret = "mIutRVyKzc1r9LUzL9GDINec"
             });
+
+            app.UseGitHubAuthentication(
+                "1a11e6a9c30e3fd15286",
+                "f7ce61ad58d4f037af1f8356ae848ec212a6c16c");
         }
     }
 }

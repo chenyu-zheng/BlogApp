@@ -6,68 +6,65 @@
     ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
-<div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <h1>Recent Updates</h1>
-        <hr />
-        <ul class="post-list">
-            @foreach (var item in Model.OrderByDescending(
-                p => p.Updated == null ? p.Created : p.Updated
-                ).Take(5))
-            {
-                <li class="post-list-item">
-                    <h2>
-                        <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </a>
-                    </h2>
 
-                    <p class="text-muted">
-                        <span class="glyphicon glyphicon-time"></span>
-                        @if (item.Updated.HasValue)
-                        {
-                            <span> Updated on </span>
-                            @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
-                        }
-                        <span> Posted on </span>
-                        @item.Created.ToString("dd MMM yyyy")
-                    </p>
+<h1>Recent Updates</h1>
+<hr />
+<ul class="post-list">
+    @foreach (var item in Model.OrderByDescending(
+        p => p.Updated == null ? p.Created : p.Updated
+        ).Take(5))
+    {
+        <li class="post-list-item">
+            <h2>
+                <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </a>
+            </h2>
 
-                    @if (item.MediaUrl != null)
-                    {
-                        <p>
-                            <img class="img-responsive" src=@item.MediaUrl alt="">
-                        </p>
-                    }
+            <p class="text-muted">
+                <span class="glyphicon glyphicon-time"></span>
+                @if (item.Updated.HasValue)
+                {
+                    <span> Updated on </span>
+                    @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+                }
+                <span> Posted on </span>
+                @item.Created.ToString("dd MMM yyyy")
+            </p>
 
-                    <!-- Buttons -->
-                    <ul class="list-unstyled list-inline list-btn">
-                        <li>
-                            <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
-                                Read More&ensp;<i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                        {
-                            <li>
-                                <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
-                                    Edit&ensp;<i class="fas fa-edit"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
-                                    Delete&ensp;<i class="fas fa-trash-alt"></i>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-
-                    <hr>
+            <p class="blog-abstract">
+                @if (item.MediaUrl != null)
+                {
+                    <img class="img-responsive" src=@item.MediaUrl alt="">
+                }
+            </p>
+            <!-- Buttons -->
+            <ul class="list-unstyled list-inline list-btn">
+                <li>
+                    <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                        Read More&ensp;<i class="fas fa-chevron-right"></i>
+                    </a>
                 </li>
-            }
-        </ul>
-    </div>
-</div>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
+                            Edit&ensp;<i class="fas fa-edit"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
+                            Delete&ensp;<i class="fas fa-trash-alt"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+            <hr>
+        </li>
+    }
+</ul>
+
 
 <style>
     table th, table td {
@@ -75,45 +72,43 @@
     }
 </style>
 
-<div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <h1 class="page-header">
-            Test Accounts
-        </h1>
-        <table>
-            <tr>
-                <th>
-                    Role
-                </th>
-                <th>
-                    User Name
-                </th>
-                <th>
-                    Password
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    Admin
-                </td>
-                <td>
-                    admin@myblogapp.com
-                </td>
-                <td>
-                    blogadmin
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Moderator
-                </td>
-                <td>
-                    mod@myblogapp.com
-                </td>
-                <td>
-                    blogmod
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
+
+<h1 class="page-header">
+    Test Accounts
+</h1>
+<table>
+    <tr>
+        <th>
+            Role
+        </th>
+        <th>
+            User Name
+        </th>
+        <th>
+            Password
+        </th>
+    </tr>
+    <tr>
+        <td>
+            Admin
+        </td>
+        <td>
+            admin@myblogapp.com
+        </td>
+        <td>
+            blogadmin
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Moderator
+        </td>
+        <td>
+            mod@myblogapp.com
+        </td>
+        <td>
+            blogmod
+        </td>
+    </tr>
+</table>
+

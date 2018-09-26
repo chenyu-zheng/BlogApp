@@ -44,6 +44,10 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Posts", "Index", "Posts")</li>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Create", "Create", "Posts")</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -69,10 +73,20 @@
     </header>
 
     <div class="container body-content">
-        @RenderBody()
+        <div class="row">
+            <div class="col-md-8">
+                @RenderBody()
+            </div>
+            <div class="col-md-4">
+                <p>&nbsp;</p>
+                @Html.Partial("_SearchPartial")
+                @Html.Partial("_CategoryPartial")
+            </div>
+        </div>
     </div>
-
     <hr>
+
+
 
     <!-- Footer -->
     <footer>

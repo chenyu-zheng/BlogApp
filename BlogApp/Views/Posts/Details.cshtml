@@ -6,119 +6,111 @@
     ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
-<div class="row">
+<!-- Blog Post -->
+<!-- Title -->
+<h1>@Html.DisplayFor(model => model.Post.Title)</h1>
 
-    <!-- Blog Post Content Column -->
-    <div class="col-lg-8 col-lg-offset-2">
+<!-- Author -->
+<p class="lead">
+    by <a href="#">Start Bootstrap</a>
+</p>
 
-        <!-- Blog Post -->
-        <!-- Title -->
-        <h1>@Html.DisplayFor(model => model.Post.Title)</h1>
+<hr>
 
-        <!-- Author -->
-        <p class="lead">
-            by <a href="#">Start Bootstrap</a>
-        </p>
+<!-- Date/Time -->
+<p class="text-muted">
+    <span class="glyphicon glyphicon-time"></span>
+    @if (Model.Post.Updated.HasValue)
+    {
+        <span> Updated on </span>
+        @Model.Post.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+    }
+    <span> Posted on </span>
+    @Model.Post.Created.ToString("dd MMM yyyy")
+</p>
 
-        <hr>
+<hr>
 
-        <!-- Date/Time -->
-        <p class="text-muted">
-            <span class="glyphicon glyphicon-time"></span>
-            @if (Model.Post.Updated.HasValue)
+<!-- Preview Image -->
+@if (Model.Post.MediaUrl != null)
+{
+    <img class="img-responsive" src=@Model.Post.MediaUrl alt="">
+}
+
+<hr>
+
+<!-- Post Content -->
+<p>
+    @Html.Raw(Model.Post.Body)
+</p>
+
+<!-- Edit Button -->
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = Model.Post.Id })>
+        Edit&ensp;<i class="fas fa-edit"></i>
+    </a>
+}
+
+<hr>
+
+<!-- Recent Comments -->
+<h4>Recnet Comments:</h4>
+<p>&nbsp;</p>
+
+<ol class="list-unstyled comment-list">
+    @foreach (var item in Model.RecentComments)
+    {
+        <li class="comment-item media well well-sm">
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
             {
-                <span> Updated on </span>
-                @Model.Post.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+                <div class="float-right">
+                    <a class="btn btn-link fas fa-edit" title="Edit Comment" href=@Url.Action("Edit", "Comments", new { Id = item.Id })></a>
+                    <a class="btn btn-link fas fa-trash-alt" title="Delete Comment" href=@Url.Action("Delete", "Comments", new { Id = item.Id })></a>
+                </div>
             }
-            <span> Posted on </span>
-            @Model.Post.Created.ToString("dd MMM yyyy")
-        </p>
-
-        <hr>
-
-        <!-- Preview Image -->
-        @if (Model.Post.MediaUrl != null)
-        {
-            <img class="img-responsive" src=@Model.Post.MediaUrl alt="">
-        }
-
-        <hr>
-
-        <!-- Post Content -->
-        <p>
-            @Html.Raw(Model.Post.Body)
-        </p>
-
-        <!-- Edit Button -->
-        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-        {
-            <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = Model.Post.Id })>
-                Edit&ensp;<i class="fas fa-edit"></i>
-            </a>
-        }
-
-        <hr>
-
-        <!-- Recent Comments -->
-        <h4>Recnet Comments:</h4>
-        <p>&nbsp;</p>
-
-        <ol class="list-unstyled comment-list">
-            @foreach (var item in Model.RecentComments)
-            {
-                <li class="comment-item media well well-sm">
-                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
+            <h5 class="media-heading">
+                @Html.DisplayFor(modelItem => item.Author.DisplayName)
+                <small>
+                    @if (item.Updated.HasValue)
                     {
-                        <div class="float-right">
-                            <a class="btn btn-link fas fa-edit" title="Edit Comment" href=@Url.Action("Edit", "Comments", new { Id = item.Id })></a>
-                            <a class="btn btn-link fas fa-trash-alt" title="Delete Comment" href=@Url.Action("Delete", "Comments", new { Id = item.Id })></a>
-                        </div>
+                        @item.Updated.Value.ToString("dd MMM yyyy");
                     }
-                    <h5 class="media-heading">
-                        @Html.DisplayFor(modelItem => item.Author.DisplayName)
-                        <small>
-                            @if (item.Updated.HasValue)
-                            {
-                                @item.Updated.Value.ToString("dd MMM yyyy");
-                            }
-                            else
-                            {
-                                @item.Created.ToString("dd MMM yyyy");
-                            }
-                        </small>
-                    </h5>
-                    <p class="comment-body">
-                        @Html.DisplayFor(modeItem => item.Body)
-                    </p>
-                </li>
-            }
-        </ol>
-        @if (Model.RecentComments.Count == 0)
-        {
-            <p class="text-muted">No Comments</p>
-        }
+                    else
+                    {
+                        @item.Created.ToString("dd MMM yyyy");
+                    }
+                </small>
+            </h5>
+            <p class="comment-body">
+                @Html.DisplayFor(modeItem => item.Body)
+            </p>
+        </li>
+    }
+</ol>
+@if (Model.RecentComments.Count == 0)
+{
+    <p class="text-muted">No Comments</p>
+}
 
 
-        @if (Model.CommentCount > Model.RecentComments.Count)
-        {
-            <a class="btn btn-default" href=@Url.Action("Index", "Comments", new { postSlug = Model.Post.Slug })>
-                View All @Model.CommentCount Comments&ensp;<i class="fas fa-chevron-right"></i>
-            </a>
-        }
+@if (Model.CommentCount > Model.RecentComments.Count)
+{
+    <a class="btn btn-default" href=@Url.Action("Index", "Comments", new { postSlug = Model.Post.Slug })>
+        View All @Model.CommentCount Comments&ensp;<i class="fas fa-chevron-right"></i>
+    </a>
+}
 
-        <hr>
+<hr>
 
-        <!-- Comments Form -->
-        @{ Html.RenderAction("Create", "Comments", new { postId = Model.Post.Id }); }
+<!-- Comments Form -->
+@{ Html.RenderAction("Create", "Comments", new { postId = Model.Post.Id }); }
 
-        <!-- Back Button -->
-        <a class="btn btn-default" href=@Url.Action("Index", "Posts")>
-            Back to List&ensp;<i class="fas fa-chevron-left"></i>
-        </a>
+<!-- Back Button -->
+<a class="btn btn-default" href=@Url.Action("Index", "Posts")>
+    Back to List&ensp;<i class="fas fa-chevron-left"></i>
+</a>
 
-    </div>
-
-</div>
 <!-- /.row -->
 
 @section Scripts {

@@ -15,6 +15,10 @@
   height: auto;
 }
 
+.float-right{
+    float: right;
+}
+
 @media only screen and (min-width: 768px) {
   .navbar-right {
     margin-left: 15px;

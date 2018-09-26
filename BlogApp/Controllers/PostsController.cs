@@ -53,6 +53,7 @@ namespace BlogApp.Controllers
             
             PostDetails postDetails = db.Posts
                 .Where(p => p.Slug == slug)
+                .Include(p => p.Comments.Select(t => t.Author))
                 .Select(p => new PostDetails
                 {
                     Post = p,

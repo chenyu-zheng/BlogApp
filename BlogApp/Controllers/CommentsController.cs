@@ -17,10 +17,15 @@ namespace BlogApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comments
-        public ActionResult Index(int postId)
+        public ActionResult Index(string postSlug)
         {
+            if (string.IsNullOrWhiteSpace(postSlug))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             PostComments postComments = db.Posts
-                .Where(p => p.Id == postId)
+                .Include(p => p.Comments.Select(c => c.Author))
+                .Where(p => p.Slug == postSlug)
                 .Select(p => new PostComments
                 {
                     Title = p.Title,
@@ -55,11 +60,42 @@ namespace BlogApp.Controllers
         }
 
         // GET: Comments/Create
-        public ActionResult Create(int postId)
+        public ActionResult Create(int? postId)
         {
-            Comment comment = new Comment();
-            comment.PostId = postId;
+            if (postId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Comment comment = new Comment()
+            {
+                PostId = postId ?? default(int)
+            };
             return PartialView(comment);
+        }
+
+        // GET: Comments/Create
+        public ActionResult CreateBySlug(string postSlug)
+        {
+            if (string.IsNullOrWhiteSpace(postSlug))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var post = db.Posts
+                .Where(p => p.Slug == postSlug)
+                .Select(p => new { Id = p.Id })
+                .FirstOrDefault();
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            Comment comment = new Comment()
+            {
+                PostId = post.Id
+            };
+            return PartialView("Create", comment);
         }
 
         // POST: Comments/Create
@@ -89,7 +125,7 @@ namespace BlogApp.Controllers
         }
 
         // GET: Comments/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Admin, Moderator")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -101,8 +137,7 @@ namespace BlogApp.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
-            ViewBag.PostId = new SelectList(db.Posts, "Id", "Title", comment.PostId);
+
             return View(comment);
         }
 
@@ -111,23 +146,27 @@ namespace BlogApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,PostId,AuthorId,Body,UpdateReason")] Comment comment)
+        [Authorize(Roles = "Admin, Moderator")]
+        public ActionResult Edit([Bind(Include = "Id,Body,UpdateReason")] Comment comment)
         {
             if (ModelState.IsValid)
             {
-                Comment op = db.Comments.Where(p => p.Id == comment.Id).FirstOrDefault();
-                op.Body = comment.Body;
-                op.UpdateReason = comment.UpdateReason;
-                op.Updated = DateTime.Now;
+                Comment oc = db.Comments
+                    .Where(p => p.Id == comment.Id)
+                    .FirstOrDefault();
+
+                oc.Body = comment.Body;
+                oc.UpdateReason = comment.UpdateReason;
+                oc.Updated = DateTime.Now;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { postSlug = oc.Post.Slug});
             }
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
-            ViewBag.PostId = new SelectList(db.Posts, "Id", "Title", comment.PostId);
+
             return View(comment);
         }
 
         // GET: Comments/Delete/5
+        [Authorize(Roles = "Admin, Moderator")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -145,12 +184,14 @@ namespace BlogApp.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Moderator")]
         public ActionResult DeleteConfirmed(int id)
         {
             Comment comment = db.Comments.Find(id);
+            string slug = comment.Post.Slug;
             db.Comments.Remove(comment);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { postSlug = slug });
         }
 
         protected override void Dispose(bool disposing)

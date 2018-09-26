@@ -67,6 +67,13 @@
             @foreach (var item in Model.RecentComments)
             {
                 <li class="comment-item media well well-sm">
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
+                    {
+                        <div class="float-right">
+                            <a class="btn btn-link fas fa-edit" title="Edit Comment" href=@Url.Action("Edit", "Comments", new { Id = item.Id })></a>
+                            <a class="btn btn-link fas fa-trash-alt" title="Delete Comment" href=@Url.Action("Delete", "Comments", new { Id = item.Id })></a>
+                        </div>
+                    }
                     <h5 class="media-heading">
                         @Html.DisplayFor(modelItem => item.Author.DisplayName)
                         <small>
@@ -79,15 +86,6 @@
                                 @item.Created.ToString("dd MMM yyyy");
                             }
                         </small>
-                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
-                        {
-                            <a class="btn btn-link btn-sm" title="Edit Comment" href=@Url.Action("Edit", "Comments", new { Id = item.Id })>
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a class="btn btn-link btn-sm" title="Delete Comment" href=@Url.Action("Delete", "Comments", new { Id = item.Id })>
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        }
                     </h5>
                     <p class="comment-body">
                         @Html.DisplayFor(modeItem => item.Body)
@@ -103,7 +101,7 @@
 
         @if (Model.CommentCount > Model.RecentComments.Count)
         {
-            <a class="btn btn-default" href=@Url.Action("Index", "Comments", new { postId = Model.Post.Id })>
+            <a class="btn btn-default" href=@Url.Action("Index", "Comments", new { postSlug = Model.Post.Slug })>
                 View All @Model.CommentCount Comments&ensp;<i class="fas fa-chevron-right"></i>
             </a>
         }

@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin.Security.Providers.GitHub;
 using Owin;
 using BlogApp.Models;
+using Owin.Security.Providers.Reddit;
 
 namespace BlogApp
 {
@@ -68,6 +69,10 @@ namespace BlogApp
             app.UseGitHubAuthentication(
                 "1a11e6a9c30e3fd15286",
                 "f7ce61ad58d4f037af1f8356ae848ec212a6c16c");
+
+            app.UseRedditAuthentication(
+                "ynBSSRfTk7OflA",
+                "pVqas1jmXBhVFo2bCOhFOEpONXA");
         }
     }
 }

@@ -1,87 +1,63 @@
-﻿@model IEnumerable<BlogApp.Models.Comment>
+﻿@model BlogApp.ViewModels.PostComments
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "All Comments";
+    ViewBag.Heading = "Comments";
+    ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
-<ol class="list-unstyled comment-list">
-    @foreach(var item in Model.OrderByDescending(p => p.Created))
-    {
-        <li class="comment-item media">
-            <h4 class="media-heading">
-                @Html.DisplayFor(modelItem => item.Author.DisplayName)
-                <small>
-                    @if (item.Updated.HasValue)
-                    {
-                        @item.Updated.Value.ToString("dd MMM yyyy");
-                    }
-                    else
-                    {
-                        @item.Created.ToString("dd MMM yyyy");
-                    }
-                </small>
-            </h4>
-            <p class="comment-body">
-                @Html.DisplayFor(modeItem => item.Body)
-            </p>
-        </li>
-    }
-</ol>
 
-@*<h2>Index</h2>
+<div class="row">
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Author.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Post.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Body)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Updated)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateReason)
-        </th>
-        <th></th>
-    </tr>
+    <div class="col-lg-8 col-lg-offset-2">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Author.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Post.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Body)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Created)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Updated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateReason)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+        <!-- Blog Post -->
+        <!-- Title -->
+        <h2>@Html.DisplayFor(model => model.Title)</h2>
+        <h4 class="text-muted">Comments:</h4>
+
+        <hr />
+
+        <ol class="list-unstyled comment-list">
+            @foreach (var item in Model.Comments)
+            {
+                <li class="comment-item media well well-sm">
+                    <h5 class="media-heading">
+                        @Html.DisplayFor(modelItem => item.Author.DisplayName)
+                        <small>
+                            @if (item.Updated.HasValue)
+                            {
+                                @item.Updated.Value.ToString("dd MMM yyyy");
+                            }
+                            else
+                            {
+                                @item.Created.ToString("dd MMM yyyy");
+                            }
+                        </small>
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
+                        {
+                            <a class="btn btn-link btn-sm" title="Edit Comment" href=@Url.Action("Edit", "Comments", new { Id = item.Id })>
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a class="btn btn-link btn-sm" title="Delete Comment" href=@Url.Action("Delete", "Comments", new { Id = item.Id })>
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        }
+                    </h5>
+                    <p class="comment-body">
+                        @Html.DisplayFor(modeItem => item.Body)
+                    </p>
+                </li>
+            }
+        </ol>
+
+        <hr />
+
+        <a class="btn btn-default" href=@Url.Action("DetailsBySlug", "Posts", new { slug = Model.Slug })>
+            Back to Post&ensp;<i class="fas fa-chevron-left"></i>
+        </a>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
-
-</table>*@

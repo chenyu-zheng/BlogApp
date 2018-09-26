@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using BlogApp.Helpers;
 using BlogApp.Models;
+using BlogApp.ViewModels;
 using PagedList;
 using PagedList.Mvc;
 
@@ -49,12 +50,26 @@ namespace BlogApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = db.Posts.FirstOrDefault(p => p.Slug == slug);
-            if (post == null)
+            
+            PostDetails postDetails = db.Posts
+                .Where(p => p.Slug == slug)
+                .Select(p => new PostDetails
+                {
+                    Post = p,
+                    RecentComments = p.Comments
+                    .OrderByDescending(c => c.Id)
+                    .Take(5)
+                    .ToList(),
+                    CommentCount = p.Comments.Count()
+                })
+                .FirstOrDefault();
+
+            if (postDetails == null)
             {
                 return HttpNotFound();
             }
-            return View("Details", post);
+
+            return View("Details", postDetails);
         }
 
 

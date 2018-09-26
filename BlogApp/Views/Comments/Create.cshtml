@@ -1,11 +1,11 @@
 ﻿@model BlogApp.Models.Comment
 
+<div class="well">
+    @if (User.Identity.IsAuthenticated)
+    {
 
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="well">
         <h4>Leave a Comment:</h4>
-        @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+        using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
@@ -24,8 +24,16 @@
                 <button type="submit" class="btn btn-primary">Submit&ensp;<i class="fas fa-plus"></i></button>
             </div>
         }
-    </div>
-}
+
+    }
+    else
+    {
+        <h4>
+            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            to Comment
+        </h4>
+    }
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

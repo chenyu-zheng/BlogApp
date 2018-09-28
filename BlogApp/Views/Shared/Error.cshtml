@@ -2,8 +2,15 @@
 
 @{
     ViewBag.Title = "Error";
+    ViewBag.Heading = "Error";
+    ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
+<hr />
+
+<a class="btn btn-default" href=@Url.Action("Index", "Home")>
+    Back to Home&ensp;<i class="fas fa-home"></i>
+</a>

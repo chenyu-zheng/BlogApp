@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -22,7 +18,14 @@ namespace BlogApp
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            var email = new MailMessage(
+                $"MyBlogApp<{WebConfigurationManager.AppSettings["emailfrom"]}>",
+                message.Destination,
+                message.Subject,
+                message.Body
+                );
+
+            return new PersonalEmail().SendAsync(email);
         }
     }
 

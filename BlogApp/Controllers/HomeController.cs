@@ -1,11 +1,9 @@
 ﻿using BlogApp.Models;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace BlogApp.Controllers
@@ -41,10 +39,10 @@ namespace BlogApp.Controllers
                 try
                 {
                     var body = "<p>Email From: <strong>{0}</strong>({1})</p> <p>Subject: <strong>{2}</strong></p> <p>Message:</p><p>{3}</p>";
-                    var from = "MyPortfolio<57147916@qq.com>";
+                    var from = "MyBlogApp<{0}>";
 
-                    var email = new MailMessage(from,
-                                ConfigurationManager.AppSettings["emailto"])
+                    var email = new MailMessage(string.Format(from, WebConfigurationManager.AppSettings["emailfrom"]),
+                                WebConfigurationManager.AppSettings["emailto"])
                     {
                         Subject = "Blog App Contact Email",
                         Body = string.Format(body, model.FromName, model.FromEmail, model.Subject, model.Body),

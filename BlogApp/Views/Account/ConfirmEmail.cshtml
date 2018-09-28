@@ -1,10 +1,22 @@
 ﻿@{
     ViewBag.Title = "Confirm Email";
+    ViewBag.Heading = "Confirm Email";
+    ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h4>Email Confirmed!</h4>
 <div>
     <p>
-        Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        Thank you for confirming your email.
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <span>&nbsp;Please&nbsp;@Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</span>
+        }
+
+        <hr />
+
+        <a class="btn btn-default" href=@Url.Action("Index", "Home")>
+            Back to Home&ensp;<i class="fas fa-home"></i>
+        </a>
     </p>
 </div>

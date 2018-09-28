@@ -42,12 +42,13 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Posts", "Index", "Posts")</li>
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
                         <li>@Html.ActionLink("Create", "Create", "Posts")</li>
                     }
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Posts", "Index", "Posts")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

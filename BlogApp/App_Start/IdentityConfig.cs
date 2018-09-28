@@ -23,7 +23,10 @@ namespace BlogApp
                 message.Destination,
                 message.Subject,
                 message.Body
-                );
+                )
+            {
+                IsBodyHtml = true
+            };
 
             return new PersonalEmail().SendAsync(email);
         }
@@ -46,7 +49,7 @@ namespace BlogApp
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
@@ -87,7 +90,7 @@ namespace BlogApp
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;

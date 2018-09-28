@@ -14,12 +14,17 @@
 
 }
 
-.float-right{
+.float-right {
     float: right;
 }
 
+#socialLoginList button {
+    margin: 5px;
+    min-width: 100px;
+}
+
 @media only screen and (min-width: 768px) {
-  .navbar-right {
+    .navbar-right {
     margin-left: 15px;
   }
 }

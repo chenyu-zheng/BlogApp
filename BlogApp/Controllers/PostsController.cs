@@ -21,12 +21,26 @@ namespace BlogApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Posts
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string searchString)
         {
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            IPagedList<PostListItem> posts = db.Posts
+
+            var postQuery = db.Posts
                 .OrderByDescending(p => p.Id)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Title.Contains(searchString) ||
+                                p.Body.Contains(searchString) ||
+                                p.Author.DisplayName.Contains(searchString) ||
+                                p.Comments.Any(t => t.Body.Contains(searchString))
+                           ).AsQueryable();
+            }
+
+            IPagedList<PostListItem> posts = postQuery
                 .Select(p => new PostListItem
                 {
                     Id = p.Id,
@@ -41,6 +55,8 @@ namespace BlogApp.Controllers
                     CommentCount = p.Comments.Count()
                 })
                 .ToPagedList(pageNumber, pageSize);
+
+            ViewBag.SearchString = searchString;
 
             return View(posts);
         }

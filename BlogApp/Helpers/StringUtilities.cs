@@ -151,6 +151,11 @@ namespace BlogApp.Helpers
 
         public static string GenerateSnippet(string htmlString)
         {
+            if (string.IsNullOrWhiteSpace(htmlString))
+            {
+                return null;
+            }
+
             string text = HttpUtility.HtmlDecode(Regex.Replace(htmlString, "<[^>]*(>|$)", string.Empty));
 
             return text.Substring(0, 200) + "...";

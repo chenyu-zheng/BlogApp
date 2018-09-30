@@ -228,6 +228,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\PostComments.cs" />
     <Compile Include="ViewModels\PostDetails.cs" />
+    <Compile Include="ViewModels\PostListItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -478,6 +479,8 @@
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Shared\_CategoryPartial.cshtml" />
     <Content Include="Views\Home\_ContactSent.cshtml" />
+    <Content Include="Views\Posts\_PostListPartial.cshtml" />
+    <Content Include="Views\Comments\_CommentListPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

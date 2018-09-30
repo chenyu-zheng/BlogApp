@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BlogApp.Models.Comment>
+
+<ol class="list-unstyled comment-list">
+    @foreach (var item in Model)
+    {
+        <li class="comment-item media well well-sm">
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
+            {
+                <div class="float-right">
+                    <a class="btn btn-link fas fa-edit" title="Edit Comment" href=@Url.Action("Edit", "Comments", new { Id = item.Id })></a>
+                    <a class="btn btn-link fas fa-trash-alt" title="Delete Comment" href=@Url.Action("Delete", "Comments", new { Id = item.Id })></a>
+                </div>
+            }
+            <h5 class="media-heading">
+                @Html.DisplayFor(modelItem => item.Author.DisplayName)
+                <small>
+                    @if (item.Updated.HasValue)
+                    {
+                        @item.Updated.Value.ToString("dd MMM yyyy");
+                    }
+                    else
+                    {
+                        @item.Created.ToString("dd MMM yyyy");
+                    }
+                </small>
+            </h5>
+            <p class="comment-body">
+                @Html.DisplayFor(modeItem => item.Body)
+            </p>
+        </li>
+    }
+</ol>

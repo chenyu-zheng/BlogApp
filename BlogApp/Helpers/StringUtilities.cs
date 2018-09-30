@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace BlogApp.Helpers
@@ -146,6 +147,13 @@ namespace BlogApp.Helpers
             {
                 return "";
             }
+        }
+
+        public static string GenerateSnippet(string htmlString)
+        {
+            string text = HttpUtility.HtmlDecode(Regex.Replace(htmlString, "<[^>]*(>|$)", string.Empty));
+
+            return text.Substring(0, 200) + "...";
         }
     }
 }

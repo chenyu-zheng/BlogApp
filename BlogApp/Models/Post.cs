@@ -10,6 +10,8 @@ namespace BlogApp.Models
     public class Post
     {
         public int Id { get; set; }
+        public string AuthorId { get; set; }
+        public virtual ApplicationUser Author { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset? Updated { get; set; }
         [StringLength(100, MinimumLength = 4, ErrorMessage = "The {0} must be between {2} and {1} characters.")]
@@ -19,6 +21,7 @@ namespace BlogApp.Models
         [AllowHtml]
         [StringLength(20000, ErrorMessage = "The {0} cannot exceed {1} characters.")]
         public string Body { get; set; }
+        public string Snippet { get; set; }
         public string MediaUrl { get; set; }
         public bool Published { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

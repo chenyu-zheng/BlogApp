@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using BlogApp.Helpers;
 using BlogApp.Models;
 using BlogApp.ViewModels;
+using Microsoft.AspNet.Identity;
 using PagedList;
 using PagedList.Mvc;
 
@@ -24,7 +25,22 @@ namespace BlogApp.Controllers
         {
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            IPagedList<Post> posts = db.Posts.OrderByDescending(p => p.Id).ToPagedList(pageNumber, pageSize);
+            IPagedList<PostListItem> posts = db.Posts
+                .OrderByDescending(p => p.Id)
+                .Select(p => new PostListItem
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Slug = p.Slug,
+                    AuthorName = p.Author.DisplayName,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    Snippet = p.Snippet,
+                    MediaUrl = p.MediaUrl,
+                    Published = p.Published,
+                    CommentCount = p.Comments.Count()
+                })
+                .ToPagedList(pageNumber, pageSize);
 
             return View(posts);
         }
@@ -56,7 +72,14 @@ namespace BlogApp.Controllers
                 .Include(p => p.Comments.Select(t => t.Author))
                 .Select(p => new PostDetails
                 {
-                    Post = p,
+                    Id = p.Id,
+                    Title = p.Title,
+                    Slug = p.Slug,
+                    AuthorName = p.Author.DisplayName,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    MediaUrl = p.MediaUrl,
+                    Body = p.Body,
                     RecentComments = p.Comments
                     .OrderByDescending(c => c.Id)
                     .Take(5)
@@ -103,6 +126,7 @@ namespace BlogApp.Controllers
                     return View(post);
                 }
                 post.Slug = slug;
+
                 if (image != null)
                 {
                     if (!ImageUploadValidator.IsWebFriendlyImage(image))
@@ -115,6 +139,10 @@ namespace BlogApp.Controllers
                     image.SaveAs(Path.Combine(Server.MapPath("~/Uploads"), fileName));
                     post.MediaUrl = "/Uploads/" + fileName;
                 }
+
+                post.Snippet = StringUtilities.GenerateSnippet(post.Body);
+
+                post.AuthorId = User.Identity.GetUserId();
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -174,6 +202,7 @@ namespace BlogApp.Controllers
                 }
                 op.Title = post.Title;
                 op.Body = post.Body;
+                op.Snippet = StringUtilities.GenerateSnippet(post.Body);
                 op.Published = post.Published;
                 op.Updated = DateTime.Now;
                 db.SaveChanges();

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<BlogApp.ViewModels.PostListItem>
+
+<ul class="post-list">
+    @foreach (var item in Model)
+    {
+        <li class="post-list-item">
+            <h2>
+                <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </a>
+            </h2>
+
+            <p class="text-muted">
+                By @Html.DisplayFor(modelItem => item.AuthorName)&emsp;
+                <span class="glyphicon glyphicon-time"></span>
+                @if (item.Updated.HasValue)
+                {
+                    <span> Updated on </span>
+                    @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+                }
+                <span> Posted on </span>
+                @item.Created.ToString("dd MMM yyyy")&emsp;
+                @Html.DisplayFor(modelItem => item.CommentCount)&nbsp;
+                @(item.CommentCount == 1 ? "Comment" : "Comments")
+            </p>
+
+            @if (item.MediaUrl != null)
+            {
+                <p>
+                    <img class="img-responsive" src=@item.MediaUrl alt="">
+                </p>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(item.Snippet))
+            {
+                <p>
+                    @Html.DisplayFor(modelItem => item.Snippet)
+                </p>
+            }
+
+            <!-- Buttons -->
+            <ul class="list-unstyled list-inline list-btn">
+                <li>
+                    <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                        Read More&ensp;<i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="btn btn-default" href=@Url.Action("Edit", "Posts", new { Id = item.Id })>
+                            Edit&ensp;<i class="fas fa-edit"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default" href=@Url.Action("Delete", "Posts", new { Id = item.Id })>
+                            Delete&ensp;<i class="fas fa-trash-alt"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+            <hr>
+        </li>
+    }
+</ul>

@@ -1,5 +1,7 @@
 ﻿using BlogApp.Models;
+using BlogApp.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -14,7 +16,25 @@ namespace BlogApp.Controllers
 
         public ActionResult Index()
         {
-            return View(db.Posts.ToList());
+            List<PostListItem> posts = db.Posts
+                .OrderByDescending(p => p.Id)
+                .Take(5)
+                .Select(p => new PostListItem
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Slug = p.Slug,
+                    AuthorName = p.Author.DisplayName,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    Snippet = p.Snippet,
+                    MediaUrl = p.MediaUrl,
+                    Published = p.Published,
+                    CommentCount = p.Comments.Count()
+                })
+                .ToList();
+
+            return View(posts);
         }
 
         public ActionResult About()

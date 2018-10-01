@@ -5,7 +5,7 @@
     {
         <li class="post-list-item">
             <h2>
-                <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                <a href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug, returnUrl = Request.Url.PathAndQuery })>
                     @Html.DisplayFor(modelItem => item.Title)
                 </a>
             </h2>
@@ -13,13 +13,14 @@
             <p class="text-muted">
                 By @Html.DisplayFor(modelItem => item.AuthorName)&emsp;
                 <span class="glyphicon glyphicon-time"></span>
+                <span>Posted on </span>
+                @item.Created.ToString("dd MMM yyyy")
                 @if (item.Updated.HasValue)
                 {
-                    <span> Updated on </span>
-                    @item.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+                    <span>&emsp;Updated on </span>
+                    @item.Updated.Value.ToString("dd MMM yyyy")
                 }
-                <span> Posted on </span>
-                @item.Created.ToString("dd MMM yyyy")&emsp;
+                &emsp;
                 @Html.DisplayFor(modelItem => item.CommentCount)&nbsp;
                 @(item.CommentCount == 1 ? "Comment" : "Comments")
             </p>
@@ -41,7 +42,7 @@
             <!-- Buttons -->
             <ul class="list-unstyled list-inline list-btn">
                 <li>
-                    <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug })>
+                    <a class="btn btn-primary" href=@Url.Action("DetailsBySlug", "Posts", new { slug = item.Slug, returnUrl = Request.Url.PathAndQuery })>
                         Read More&ensp;<i class="fas fa-chevron-right"></i>
                     </a>
                 </li>

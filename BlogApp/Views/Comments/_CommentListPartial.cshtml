@@ -14,19 +14,25 @@
             <h5 class="media-heading">
                 @Html.DisplayFor(modelItem => item.Author.DisplayName)
                 <small>
+                    &emsp;@item.Created.ToString("dd MMM yyyy")
                     @if (item.Updated.HasValue)
-                    {
-                        @item.Updated.Value.ToString("dd MMM yyyy");
-                    }
-                    else
-                    {
-                        @item.Created.ToString("dd MMM yyyy");
+                    {<span>&emsp;Updated: </span>
+                        @item.Updated.Value.ToString("dd MMM yyyy")
                     }
                 </small>
             </h5>
             <p class="comment-body">
                 @Html.DisplayFor(modeItem => item.Body)
             </p>
+            @if (!string.IsNullOrWhiteSpace(item.UpdateReason))
+            {
+                <hr />
+                <p>
+                    <h6><i>Update Reason:</i></h6>
+                    <i>@Html.DisplayFor(modeItem => item.UpdateReason)</i>
+                    
+                </p>
+            }
         </li>
     }
 </ol>

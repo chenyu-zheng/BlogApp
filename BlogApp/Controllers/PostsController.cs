@@ -76,7 +76,7 @@ namespace BlogApp.Controllers
             return View(post);
         }
 
-        public ActionResult DetailsBySlug(string slug)
+        public ActionResult DetailsBySlug(string slug, string returnUrl)
         {
             if (string.IsNullOrWhiteSpace(slug))
             {
@@ -108,6 +108,8 @@ namespace BlogApp.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.ReturnUrl = returnUrl;
 
             return View("Details", postDetails);
         }
@@ -156,7 +158,7 @@ namespace BlogApp.Controllers
                     post.MediaUrl = "/Uploads/" + fileName;
                 }
 
-                post.Snippet = StringUtilities.GenerateSnippet(post.Body);
+                post.Snippet = StringUtilities.GenerateSnippet(post.Body, 300);
 
                 post.AuthorId = User.Identity.GetUserId();
                 db.Posts.Add(post);
@@ -218,7 +220,7 @@ namespace BlogApp.Controllers
                 }
                 op.Title = post.Title;
                 op.Body = post.Body;
-                op.Snippet = StringUtilities.GenerateSnippet(post.Body);
+                op.Snippet = StringUtilities.GenerateSnippet(post.Body, 300);
                 op.Published = post.Published;
                 op.Updated = DateTime.Now;
                 db.SaveChanges();

@@ -1,51 +1,62 @@
 ﻿@model BlogApp.Models.Post
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Post";
     ViewBag.Heading = "Delete Post";
     ViewBag.SubHeading = "Built with ASP.NET MVC 5";
 }
 
 <h3 class="text-danger">Are you sure you want to delete this post?</h3>
 <hr />
-<h2>
-    @Html.DisplayFor(model => model.Title)
-</h2>
+<!-- Title -->
+<h1>@Html.DisplayFor(model => model.Title)</h1>
 
-<p class="text-muted">
-    <span class="glyphicon glyphicon-time"></span>
-    @if (Model.Updated.HasValue)
-    {
-        <span> Updated on </span>
-        @Model.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
-    }
-    <span> Posted on </span>
-    @Model.Created.ToString("dd MMM yyyy")
-</p>
-
-@if (Model.MediaUrl != null)
-{
-    <p>
-        <img class="img-responsive" src=@Model.MediaUrl alt="">
-    </p>
-}
-
-<p>
-    @Html.Raw(Model.Body)
+<!-- Author -->
+<p class="lead text-muted">
+    by @Html.DisplayFor(model => model.Author.DisplayName)
 </p>
 
 <hr>
 
-<div>
-    @using (Html.BeginForm())
+<!-- Date/Time -->
+<p class="text-muted">
+    <span class="glyphicon glyphicon-time"></span>
+    <span>Posted on </span>
+    @Model.Created.ToString("dd MMM yyyy")
+    @if (Model.Updated.HasValue)
     {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <a class="btn btn-default" href=@Url.Action("Index", "Posts" )>
-                Back to List&ensp;<i class="fas fa-chevron-left"></i>
-            </a>
-            <button type="submit" class="btn btn-danger">Delete&ensp;<i class="fas fa-trash-alt"></i></button>
-        </div>
+        <span>&emsp;Updated on </span>
+        @Model.Updated.Value.ToString("dd MMM yyyy")
     }
-</div>
+
+</p>
+
+<hr>
+
+<!-- Preview Image -->
+@if (Model.MediaUrl != null)
+{
+    <img class="img-responsive" src=@Model.MediaUrl alt="">
+}
+
+<hr>
+
+<!-- Post Content -->
+<p>
+    @Html.Raw(Model.Body)
+</p>
+<hr>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <a class="btn btn-default" href=@Url.Action("Index", "Posts" )>
+            Back to List&ensp;<i class="fas fa-chevron-left"></i>
+        </a>
+        <button type="submit" class="btn btn-danger">Delete&ensp;<i class="fas fa-trash-alt"></i></button>
+    </div>
+}
+

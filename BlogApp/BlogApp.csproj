@@ -252,6 +252,7 @@
     <Content Include="Images\home-bg.jpg" />
     <Content Include="Images\post-bg.jpg" />
     <Content Include="Images\post-sample-image.jpg" />
+    <Content Include="Images\qr-blog-app.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -477,7 +478,7 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
-    <Content Include="Views\Shared\_CategoryPartial.cshtml" />
+    <Content Include="Views\Shared\_AboutPartial.cshtml" />
     <Content Include="Views\Home\_ContactSent.cshtml" />
     <Content Include="Views\Posts\_PostListPartial.cshtml" />
     <Content Include="Views\Comments\_CommentListPartial.cshtml" />

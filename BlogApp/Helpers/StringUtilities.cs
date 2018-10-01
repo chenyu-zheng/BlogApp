@@ -149,7 +149,7 @@ namespace BlogApp.Helpers
             }
         }
 
-        public static string GenerateSnippet(string htmlString)
+        public static string GenerateSnippet(string htmlString, int length)
         {
             if (string.IsNullOrWhiteSpace(htmlString))
             {
@@ -158,7 +158,7 @@ namespace BlogApp.Helpers
 
             string text = HttpUtility.HtmlDecode(Regex.Replace(htmlString, "<[^>]*(>|$)", string.Empty));
 
-            return text.Substring(0, 200) + "...";
+            return text.Substring(0, length > text.Length? text.Length : length) + "...";
         }
     }
 }

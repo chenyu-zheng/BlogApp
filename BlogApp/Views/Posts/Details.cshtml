@@ -20,13 +20,14 @@
 <!-- Date/Time -->
 <p class="text-muted">
     <span class="glyphicon glyphicon-time"></span>
+    <span>Posted on </span>
+    @Model.Created.ToString("dd MMM yyyy")
     @if (Model.Updated.HasValue)
     {
-        <span> Updated on </span>
-        @Model.Updated.Value.ToString("dd MMM yyyy")<span>&emsp;</span>
+    <span>&emsp;Updated on </span>
+        @Model.Updated.Value.ToString("dd MMM yyyy")
     }
-    <span> Posted on </span>
-    @Model.Created.ToString("dd MMM yyyy")
+
 </p>
 
 <hr>
@@ -79,7 +80,7 @@
 @{ Html.RenderAction("Create", "Comments", new { postId = Model.Id }); }
 
 <!-- Back Button -->
-<a class="btn btn-default" href=@Url.Action("Index", "Posts")>
+<a class="btn btn-default" href=@(string.IsNullOrWhiteSpace(ViewBag.ReturnUrl) ? Url.Action("Index", "Posts") : ViewBag.ReturnUrl) >
     Back to List&ensp;<i class="fas fa-chevron-left"></i>
 </a>
 

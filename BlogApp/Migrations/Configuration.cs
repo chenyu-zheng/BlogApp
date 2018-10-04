@@ -48,7 +48,7 @@ namespace BlogApp.Migrations
                 adminUser.LastName = WebConfigurationManager.AppSettings["admin-lastname"];
                 adminUser.DisplayName = WebConfigurationManager.AppSettings["admin-displayname"];
 
-                userManager.Create(adminUser, WebConfigurationManager.AppSettings["admin-passowrd"]);
+                userManager.Create(adminUser, WebConfigurationManager.AppSettings["admin-password"]);
             }
             else
             {

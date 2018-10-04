@@ -7,6 +7,7 @@ namespace BlogApp.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Web.Configuration;
 
     internal sealed class Configuration : DbMigrationsConfiguration<BlogApp.Models.ApplicationDbContext>
     {
@@ -37,20 +38,21 @@ namespace BlogApp.Migrations
             UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             ApplicationUser adminUser = null;
-            if (!context.Users.Any(p => p.UserName == "admin@myblogapp.com"))
+            var adminUserName = WebConfigurationManager.AppSettings["admin-username"];
+            if (!context.Users.Any(p => p.UserName == adminUserName))
             {
                 adminUser = new ApplicationUser();
-                adminUser.UserName = "admin@myblogapp.com";
-                adminUser.Email = "admin@myblogapp.com";
-                adminUser.FirstName = "Admin";
-                adminUser.LastName = "User";
-                adminUser.DisplayName = "Admin User";
+                adminUser.UserName = adminUserName;
+                adminUser.Email = adminUserName;
+                adminUser.FirstName = WebConfigurationManager.AppSettings["admin-firstname"];
+                adminUser.LastName = WebConfigurationManager.AppSettings["admin-lastname"];
+                adminUser.DisplayName = WebConfigurationManager.AppSettings["admin-displayname"];
 
-                userManager.Create(adminUser, "blogadmin");
+                userManager.Create(adminUser, WebConfigurationManager.AppSettings["admin-passowrd"]);
             }
             else
             {
-                adminUser = context.Users.Where(p => p.UserName == "admin@myblogapp.com")
+                adminUser = context.Users.Where(p => p.UserName == adminUserName)
                     .FirstOrDefault();
             }
 
@@ -60,20 +62,21 @@ namespace BlogApp.Migrations
             }
 
             ApplicationUser moderatorUser = null;
-            if (!context.Users.Any(p => p.UserName == "mod@myblogapp.com"))
+            var modUserName = WebConfigurationManager.AppSettings["moderator-username"];
+            if (!context.Users.Any(p => p.UserName == modUserName))
             {
                 moderatorUser = new ApplicationUser();
-                moderatorUser.UserName = "mod@myblogapp.com";
-                moderatorUser.Email = "mod@myblogapp.com";
-                moderatorUser.FirstName = "Moderator";
-                moderatorUser.LastName = "User";
-                moderatorUser.DisplayName = "Moderator User";
+                moderatorUser.UserName = modUserName;
+                moderatorUser.Email = modUserName;
+                moderatorUser.FirstName = WebConfigurationManager.AppSettings["moderator-firstname"];
+                moderatorUser.LastName = WebConfigurationManager.AppSettings["moderator-lastname"];
+                moderatorUser.DisplayName = WebConfigurationManager.AppSettings["moderator-displayname"];
 
-                userManager.Create(moderatorUser, "blogmod");
+                userManager.Create(moderatorUser, WebConfigurationManager.AppSettings["moderator-password"]);
             }
             else
             {
-                moderatorUser = context.Users.Where(p => p.UserName == "mod@myblogapp.com")
+                moderatorUser = context.Users.Where(p => p.UserName == modUserName)
                     .FirstOrDefault();
             }
 
